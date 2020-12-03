@@ -1,6 +1,73 @@
 require_relative '../config/environment'
+require 'pry'
 
-#while user entry != 'quit' loop
+def todays_date
+    todays_date = Time.now.to_s.split(" ")[0].split("-")
+    date = [todays_date[1],todays_date[2]]
+end
+
+input = "begin"
+print "Please enter username: "
+username = gets.chomp
+user = User.find_or_create_by(name: username)
+
+puts "Welcome to your planner!"
+while input != "quit"
+    print "What would you like to do? (input 'menu' for menu options.): "
+    input = gets.chomp
+    case input
+    when "menu"
+        puts
+        puts "Input 'entry' to create a new entry."
+        puts "Input 'day' to view your daily schedule."
+        puts "Input 'week' to view your weekly schedule."
+        puts "Input 'month' to view your monthly schedule."
+        puts "Input 'all' to view all your scheduled activities."
+        puts "Input 'update' to update an entry."
+        puts "Input 'remove' to remove an entry, or remove a group of entries."
+        puts "Input 'quit' to quit out of the program."
+        puts 
+    when "entry"
+        print "Please enter the entry's month: "
+        month = gets.chomp
+        while month > 12 || month < 1
+            print "This is not a valid month. Please provide a month from 1 to 12: "
+            month = gets.chomp
+        end
+        print "Please enter the entry's day: "
+        day = gets.chomp
+        entry_day = Day.where("month = ? AND day = ?",month,day).first_or_create
+        #continue when booked works
+    when "day"
+        todays_month, todays_day = todays_date[0], todays_date[1]
+        entry_day = Day.where("month = ? AND day = ?",todays_month,todays_day).first
+        entry_day.entries.each{|entry| puts "#{entry.converted_start_time} - #{entry.converted_end_time} : #{entry.description}"}
+    when "week"
+        todays_month, todays_day = todays_date[0], todays_date[1]
+        entry_week = [] 
+        #we will need to << valid days into this array aka not days that dont exist in a month
+    when "month"
+        todays_month = todays_date[0]
+        #uses todays date to find all days with todays month as the month.
+        days_of_this_month = Day.where("month = ?",todays_month)
+        days_of_this_month.each do |day|
+            puts "\n#{day.month}/#{day.day}"
+            entries = day.entries
+            entries.each do |entry|
+                puts "#{entry.converted_start_time} - #{entry.converted_end_time} : #{entry.description}"
+            end
+        end
+    when "all"
+        Entry.all.each
+    
+    end
+    
+    
+    
+    
 
 
-puts "HELLO WORLD"
+
+end
+
+

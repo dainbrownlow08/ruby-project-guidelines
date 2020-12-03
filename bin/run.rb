@@ -6,6 +6,23 @@ def todays_date
     date = [todays_date[1],todays_date[2]]
 end
 
+def convert_date(string_date)
+    string_date = string_date.split("/")
+    date = [string_date[0],string_date[1]]
+end
+
+def convert_hour_to_min(time_string)
+    time_string = time_string.split(":")
+    hour = time_string[0].to_i
+    min = time_string[1].to_i
+    min_since_midnight = hour*60 + min
+end
+
+def is_time_valid?(time_int)
+    !(time_int > 1440 || time_int < 0)
+end
+
+
 input = "begin"
 print "Please enter username: "
 username = gets.chomp
@@ -38,6 +55,7 @@ while input != "quit"
         day = gets.chomp
         entry_day = Day.where("month = ? AND day = ?",month,day).first_or_create
         #continue when booked works
+    
     when "day"
         todays_month, todays_day = todays_date[0], todays_date[1]
         entry_day = Day.where("month = ? AND day = ?",todays_month,todays_day).first
@@ -58,9 +76,35 @@ while input != "quit"
             end
         end
     when "all"
-        Entry.all.each
+        Entry.group(:month)
+
+    when "update"
+        date = convert_date(gets.chomp)
+        Day.where("month = ? AND day = ?",date[0],date[1]).first
+        
+    
+    when "remove"
+        print "Would you like to remove an entry, day, week, month, or all entries?: "
+        input = gets.chomp
+        case input
+        when "entry"
+            print "What is the date of the entry you would like to remove?: "
+            date = convert_date(gets.chomp)
+            print "What is the start time of the entry you would like to remove?: "
+
+        when "day"
+
+        when "week"
+
+        when "month"
+
+        when "all entries"
+
+        end
     
     end
+
+
     
     
     

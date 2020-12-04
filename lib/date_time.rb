@@ -1,7 +1,7 @@
 class DateTime
     attr_accessor :month,:day,:time
 
-    def initialize(month: nil, day: nil, time: nil)
+    def initialize(month = nil, day = nil, time = nil)
         @month = month
         @day = day
         @time = time

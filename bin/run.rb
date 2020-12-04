@@ -18,11 +18,6 @@ def convert_hour_to_min(time_string)
     min_since_midnight = hour*60 + min
 end
 
-def is_time_valid?(time_int)
-    !(time_int > 1440 || time_int < 0)
-end
-
-
 input = "begin"
 print "Please enter username: "
 username = gets.chomp
@@ -46,14 +41,13 @@ while input != "quit"
         puts 
     when "entry"
         print "Please enter the entry's month: "
-        month = gets.chomp
-        while month > 12 || month < 1
-            print "This is not a valid month. Please provide a month from 1 to 12: "
-            month = gets.chomp
-        end
+        month = gets.chomp.to_i
+       
         print "Please enter the entry's day: "
-        day = gets.chomp
-        entry_day = Day.where("month = ? AND day = ?",month,day).first_or_create
+        day = gets.chomp.to_i
+        #binding.pry
+        monthy = DateTime.new(month, day)
+        entry_day = Day.where("month = ? AND day = ?", monthy.month, monthy.day).first_or_create
         #continue when booked works
     
     when "day"

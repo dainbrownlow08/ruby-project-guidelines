@@ -1,28 +1,6 @@
 require_relative '../config/environment'
 require 'pry'
 
-def todays_date
-    todays_date = Time.now.to_s.split(" ")[0].split("-")
-    date = [todays_date[1],todays_date[2]]
-end
-
-def convert_date(string_date)
-    string_date = string_date.split("/")
-    date = [string_date[0],string_date[1]]
-end
-
-def convert_hour_to_min(time_string)
-    time_string = time_string.split(":")
-    hour = time_string[0].to_i
-    min = time_string[1].to_i
-    min_since_midnight = hour*60 + min
-end
-
-def is_time_valid?(time_int)
-    !(time_int > 1440 || time_int < 0)
-end
-
-
 input = "begin"
 print "Please enter username: "
 username = gets.chomp
@@ -47,12 +25,16 @@ while input != "quit"
     when "entry"
         print "Please enter the entry's month: "
         month = gets.chomp
-        while month > 12 || month < 1
+        while !valid_month?(month)
             print "This is not a valid month. Please provide a month from 1 to 12: "
             month = gets.chomp
         end
         print "Please enter the entry's day: "
         day = gets.chomp
+        while !valid_day?(month,day)
+            print "This is not a valid day. Please provide a valid day: "
+            day = gets.chomp
+        end
         entry_day = Day.where("month = ? AND day = ?",month,day).first_or_create
         #continue when booked works
     
@@ -99,15 +81,13 @@ while input != "quit"
         when "month"
 
         when "all entries"
-
+        
         end
-    
+        
+    else
+        puts "Not a known menu command."
     end
 
-
-    
-    
-    
     
 
 

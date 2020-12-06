@@ -22,17 +22,4 @@ class Entry < ActiveRecord::Base
         end
     end
 
-    # def self.booked_times
-    #     Entry.all.map{|entry| [entry.start_time,entry.end_time]}
-    # end
-
-    # def is_booked?
-    #     if booked_times.find{|range| self.start_time >= range[0] && self.start_time <= range[1]} == nil
-    #         false
-    #     else
-    #         true
-    #     end
-    # end
-
-
 end

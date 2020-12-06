@@ -4,13 +4,11 @@ def todays_date
     date = [todays_date[1],todays_date[2]]
 end
 
-#converts a MM/DD formatted string date
 def convert_date(string_date)
     string_date = string_date.split("/")
     date = [string_date[0],string_date[1]]
 end
 
-#converts a HH:MM formatted time string to minutes after midnight
 def convert_hour_to_min(time_string)
     time_string = time_string.split(":")
     hour = time_string[0].to_i
@@ -18,18 +16,69 @@ def convert_hour_to_min(time_string)
     min_since_midnight = hour*60 + min
 end
 
-#checks if month is between 1 and 12
 def valid_month?(month)
     if month.to_i > 12 || month.to_i < 1
-        false  
+        false
+    elsif month.to_i < todays_date[0].to_i
+        false 
     else
         true
     end
 end
 
-#checks if time is valid using minutes after midnight
-def valid_time?(time)
-    if time.to_i > 1440 || time.to_i < 1
+def valid_time?(time_array,day)
+    bounds_check = time_array.select{|time| time > 1400 || time < 0}
+    if bounds_check.length > 0
+        false
+    end
+    valid_times = valid_times(day)
+    if valid_times.find{|slot| time_array[0] >= slot[0] && time_array[1] <= slot[1]} != nil
+        true
+    else 
+        false
+    end
+end
+
+def valid_times(day)
+    schedule = day.entries.map{|entry| [entry.start_time,entry.end_time]}
+    validTimes = [[0,0]]
+    if schedule[0][0] > 0
+        validTimes[0][0] = 0
+        validTimes[0][1] = schedule[0][0]
+        (schedule.length-1).times do |i|
+            validTimes << []
+            validTimes[i+1][0] = schedule[i][1]
+            validTimes[i+1][1] = schedule[i+1][0]
+        end
+        validTimes << [schedule.last[1], 24*60]
+    else
+        validTimes[0][0] = schedule[0][1]
+        validTimes[0][1] = schedule[1][0]
+        (schedule.length-2).times do |i|
+            validTimes << []
+            validTimes[i+1][0] = schedule[i+1][1]
+            validTimes[i+1][1] = schedule[i+2][0]
+    
+        end
+        validTimes << [schedule.last[1], 24*60] if schedule.last[1] != 24*60
+    end
+end
+#checks is there are any entries that month
+def any_month_entries(month_string)
+    if Day.all.find{|day| day.month == month_string.to_i} != nil
+        days_this_month = Day.all.select{|day| day.month == month_string.to_i}
+        if days_this_month.select{|day| any_day_entries?(day)} == []
+            false
+        else
+            true
+        end
+    else 
+        false
+    end
+end
+#checks if there is any entries that day
+def any_day_entries?(day)
+    if day.entries.length == 0
         false
     else 
         true
@@ -40,78 +89,82 @@ end
 def valid_day?(month,day)
     month = month.to_i
     day = day.to_i
-    case month
-    when 1
-        if day > 31 || day < 1
-            false  
-        else
-            true
-        end
-    when 2
-        if day > 28 || day < 1
-            false  
-        else
-            true
-        end
-    when 3
-        if day > 31 || day < 1
-            false  
-        else
-            true
-        end
-    when 4
-        if day > 30 || day < 1
-            false  
-        else
-            true
-        end
-    when 5
-        if day > 31 || day < 1
-            false  
-        else
-            true
-        end
-    when 6
-        if day > 30 || day < 1
-            false  
-        else
-            true
-        end
-    when 7
-        if day > 31 || day < 1
-            false  
-        else
-            true
-        end
-    when 8
-        if day > 31 || day < 1
-            false  
-        else
-            true
-        end
-    when 9
-        if day > 30 || day < 1
-            false  
-        else
-            true
-        end
-    when 10
-        if day > 31 || day < 1
-            false  
-        else
-            true
-        end
-    when 11
-        if day > 30 || day < 1
-            false  
-        else
-            true
-        end
-    when 12
-        if day > 31 || day < 1
-            false  
-        else
-            true
+    if day < todays_date[1].to_i
+        false
+    else
+        case month
+        when 1
+            if day > 31 || day < 1
+                false  
+            else
+                true
+            end
+        when 2
+            if day > 28 || day < 1
+                false  
+            else
+                true
+            end
+        when 3
+            if day > 31 || day < 1
+                false  
+            else
+                true
+            end
+        when 4
+            if day > 30 || day < 1
+                false  
+            else
+                true
+            end
+        when 5
+            if day > 31 || day < 1
+                false  
+            else
+                true
+            end
+        when 6
+            if day > 30 || day < 1
+                false  
+            else
+                true
+            end
+        when 7
+            if day > 31 || day < 1
+                false  
+            else
+                true
+            end
+        when 8
+            if day > 31 || day < 1
+                false  
+            else
+                true
+            end
+        when 9
+            if day > 30 || day < 1
+                false  
+            else
+                true
+            end
+        when 10
+            if day > 31 || day < 1
+                false  
+            else
+                true
+            end
+        when 11
+            if day > 30 || day < 1
+                false  
+            else
+                true
+            end
+        when 12
+            if day > 31 || day < 1
+                false  
+            else
+                true
+            end
         end
     end
 end

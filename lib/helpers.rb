@@ -33,7 +33,6 @@ def valid_time?(time_array,day)
         false
     end
     valid_times = valid_times(day)
-    binding.pry
     if valid_times.find{|slot| time_array[0] >= slot[0] && time_array[1] <= slot[1]} != nil
         true
     else 
@@ -43,7 +42,7 @@ end
 
 def valid_times(day)
     if day.entries.length == 0
-        validTimes = [0,24*60]
+        validTimes = [[0,24*60]]
     else 
         schedule = day.entries.map{|entry| [entry.start_time,entry.end_time]}
         validTimes = [[0,0]]
@@ -81,6 +80,20 @@ def any_month_entries(month_string)
     else 
         false
     end
+end
+
+def any_day_entries?(day_obj)
+    if Day.all.find{|day| day.day == day_obj.day} == nil
+        false
+    else 
+        this =  Day.all.find{|day| day.day == day_obj.day}
+        if this.entries == []
+            false
+        else
+            true
+        end
+    end
+
 end
 
 #checks if day is valid for month

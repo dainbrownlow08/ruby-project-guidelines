@@ -39,12 +39,8 @@ while input != "quit"
     
     else
         case_all_other_inputs
-    
+
     end
-    
-
-
-
 end
 
 

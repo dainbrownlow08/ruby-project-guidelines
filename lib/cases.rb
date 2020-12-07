@@ -7,7 +7,6 @@ def landing
     ██╔══██║   ██╔══╝██║  ██║    ██╔═══╝ ██║     ██╔══██║██║╚██╗██║██║╚██╗██║██╔══╝  ██╔══██╗
     ██║  ██║   ██║   ██████╔╝    ██║     ███████╗██║  ██║██║ ╚████║██║ ╚████║███████╗██║  ██║
     ╚═╝  ╚═╝   ╚═╝   ╚═════╝     ╚═╝     ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝".colorize(:blue)
-    
 end
 
 def case_menu
@@ -60,13 +59,12 @@ end
 
 def case_day
     todays_month, todays_day = todays_date[0], todays_date[1]
-    entry_day = Day.where("month = ? AND day = ?",todays_month,todays_day).first
-    if Day.all.find_by(:day => entry_day) == nil
+    entry_day = Day.where("month = ? AND day = ?",todays_month.to_i,todays_day.to_i).first
+    if Day.all.find_by(:day => todays_day.to_i) == nil
         puts "\n Your schedule is empty for the day."
         return
     end
     entry_day.entries.sort_by{|entry| entry.start_time}.each{|entry| puts "\n#{entry.converted_start_time} - #{entry.converted_end_time} : #{entry.description}"}
-
 end
 
 def case_month

@@ -24,14 +24,14 @@ def case_entry(user)
     print "Please enter the entry's month: "
     month = gets.chomp
     while !valid_month?(month)
-        print "This is not a valid month. Please provide a month from #{todays_date[0]} to 12: "
+        print "This is not a valid month. Please provide a month from 1 to 12: ".colorize(:red)
         month = gets.chomp
     end
    
     print "Please enter the entry's day: "
     day = gets.chomp
     while !valid_day?(month,day)
-        print "This is not a valid day. Please provide a valid day: "
+        print "This is not a valid day. Please provide a valid day: ".colorize(:red)
         day = gets.chomp
     end
     entry_day = Day.find_or_create_by(:month => month, :day => day)
@@ -51,9 +51,9 @@ def case_entry(user)
         new_entry.user_id = user.id
         new_entry.day_id = entry_day.id
         new_entry.save
-        puts "\n Schedule updated."
+        puts "\n Schedule updated.".colorize(:green)
     else 
-        puts "\nThis is not a valid time. Try again."
+        puts "\n This is not a valid time. Try again.".colorize(:red)
     end
 end
 
@@ -69,7 +69,7 @@ def case_day(user)
         entry_day.entries.select{|entry| entry.user_id == user.id}.sort_by{|entry| entry.start_time}.each{|entry| puts "\n#{entry.converted_start_time} - #{entry.converted_end_time} : #{entry.description}"}
     end
 end
-#Day.all.find_by(:day => todays_day.to_i)
+
 
 def case_month(user)
     todays_month = todays_date[0]
@@ -79,7 +79,7 @@ def case_month(user)
     end
     days_of_this_month = Day.where("month = ?",todays_month)
     days_of_this_month.sort_by{|day| day.day }.each do |day|
-        puts "\n#{day.month}/#{day.day}"
+        puts "\n#{day.month}/#{day.day}".colorize(:cyan)
         entries = day.entries.select{|entry| entry.user_id == user.id}.sort_by{|entry| entry.start_time}
         entries.each do |entry|
             puts "\n#{entry.converted_start_time} - #{entry.converted_end_time} : #{entry.description}"
@@ -109,33 +109,33 @@ def case_update(user)
     print "Please enter the target entry's month: "
     month = gets.chomp
     while !valid_month?(month)
-        print "This is not a valid month. Please provide a month from 1 to 12: "
+        print "\n This is not a valid month. Please provide a month from 1 to 12: ".colorize(:red)
         month = gets.chomp
     end
     if any_month_entries(month,user) == false
-        puts "\nThere are no entries this month."
+        puts "\n There are no entries this month."
         return
     end
     print "Please enter the target entry's day: "
     day = gets.chomp
     while !valid_day?(month,day)
-        print "This is not a valid day. Please provide a valid day: "
+        print "\n This is not a valid day. Please provide a valid day: ".colorize(:red)
         day = gets.chomp
     end
     if Day.all.find_by(:day => day) == nil
-        puts "You have not made an entry for this day."
+        puts "\n You have not made an entry for this day."
         return
     end
     day_to_update = Day.all.find_by(:day => day)
     if any_day_entries?(day_to_update,user) == false
-        puts "You have not made an entry for this day."
+        puts "\n You have not made an entry for this day."
         return
     end
     day_to_update.entries.select{|entry| entry.user_id == user.id}.sort_by{|entry| entry.start_time}.each{|entry| puts "\n#{entry.converted_start_time} - #{entry.converted_end_time} : #{entry.description}"}
     print "\nWhat is the start time of the entry you would like to update?(please use 24hr time HH:MM): "
     chosen_time = convert_hour_to_min(gets.chomp)
     while day_to_update.entries.select{|entry| entry.user_id == user.id}.find{|entry| entry.start_time == chosen_time} == nil
-        print "\nThere is no entry with this start time, please try again(please use 24hr time HH:MM): "
+        print "\nThere is no entry with this start time, please try again(please use 24hr time HH:MM): ".colorize(:red)
         chosen_time = convert_hour_to_min(gets.chomp)
     end
     entry_to_update = day_to_update.entries.select{|entry| entry.user_id == user.id}.find{|entry| entry.start_time == chosen_time}
@@ -147,9 +147,9 @@ def case_update(user)
     if valid_time?(time,day_to_update,user) == true
         entry_to_update.update(start_time: start_time, end_time: end_time)
         day_to_update.entries.select{|entry| entry.user_id == user.id}.sort_by{|entry| entry.start_time}.each{|entry| puts "\n#{entry.converted_start_time} - #{entry.converted_end_time} : #{entry.description}"}
-        puts "\n Schedule updated."
+        puts "\n Schedule updated.".colorize(:green)
     else 
-        puts "\nThis is not a valid time. Try again."
+        puts "\n This is not a valid time. Try again.".colorize(:red)
     end
 end
 
@@ -157,38 +157,41 @@ def case_remove(user)
     print "Please enter the target entry's month: "
     month = gets.chomp
     while !valid_month?(month)
-        print "This is not a valid month. Please provide a month from 1 to 12: "
+        print "\n This is not a valid month. Please provide a month from 1 to 12: ".colorize(:red)
         month = gets.chomp
     end
     if any_month_entries(month,user) == false
-        puts "\nThere are no entries this month."
+        puts "\n There are no entries this month."
         return
     end
     print "Please enter the target entry's day: "
     day = gets.chomp
     while !valid_day?(month,day)
-        print "This is not a valid day. Please provide a valid day: "
+        print "T\n his is not a valid day. Please provide a valid day: ".colorize(:red)
         day = gets.chomp
     end
     if Day.all.find_by(:day => day) == nil
-        puts "You have not made an entry for this day."
+        puts "\n You have not made an entry for this day."
         return
     end
     day_to_remove_from = Day.all.find_by(:day => day)
     if any_day_entries?(day_to_remove_from,user) == false
-        puts "You have not made an entry for this day."
+        puts "\n You have not made an entry for this day."
         return
     end
-    day_to_remove_from.entries.sort_by{|entry| entry.start_time}.each{|entry| puts "\n#{entry.converted_start_time} - #{entry.converted_end_time} : #{entry.description}"}
+    day_to_remove_from.entries.select{|entry| entry.user_id == user.id}.sort_by{|entry| entry.start_time}.each{|entry| puts "\n#{entry.converted_start_time} - #{entry.converted_end_time} : #{entry.description}"}
     
     print "\nWhat is the start time of the entry you would like to delete?(please use 24hr time HH:MM): "
     chosen_time = convert_hour_to_min(gets.chomp)
-    while day_to_remove_from.entries.find{|entry| entry.start_time == chosen_time} == nil
+    while day_to_remove_from.entries.select{|entry| entry.user_id == user.id}.find{|entry| entry.start_time == chosen_time} == nil
         print "\nThere is no entry with this start time, please try again(please use 24hr time HH:MM): "
         chosen_time = convert_hour_to_min(gets.chomp)
     end
-    entry_to_destroy = day_to_remove_from.entries.find{|entry| entry.start_time == chosen_time}.destroy
-    puts "\n Entry removed."
+    entry_to_destroy = day_to_remove_from.entries.select{|entry| entry.user_id == user.id}.find{|entry| entry.start_time == chosen_time}.destroy
+    puts "\n Entry removed.".colorize(:green)
+    if day_to_remove_from.entries == []
+        day_to_remove_from.destroy
+    end
 end
 
 def case_quit(user)
@@ -196,5 +199,5 @@ def case_quit(user)
 end
 
 def case_all_other_inputs
-    puts "\n Not a known command. Try again."
+    puts "\n Not a known command. Try again.".colorize(:red)
 end

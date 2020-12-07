@@ -32,7 +32,7 @@ while input != "quit"
         case_update(user)
     
     when "remove"
-        case_remove  
+        case_remove(user) 
     
     when "quit"
         case_quit(user)

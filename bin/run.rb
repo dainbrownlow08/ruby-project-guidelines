@@ -20,16 +20,16 @@ while input != "quit"
         case_entry(user)
         
     when "day"
-        case_day
+        case_day(user)
 
     when "month"
-        case_month
+        case_month(user)
     
     when "all"
-        case_all
+        case_all(user)
     
     when "update"
-        case_update
+        case_update(user)
     
     when "remove"
         case_remove  

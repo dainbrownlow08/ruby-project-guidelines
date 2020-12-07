@@ -14,6 +14,7 @@ GEM
       tzinfo (~> 1.1)
     arel (9.0.0)
     coderay (1.1.1)
+    colorize (0.8.1)
     concurrent-ruby (1.1.7)
     database_cleaner (1.8.5)
     diff-lcs (1.4.4)
@@ -64,6 +65,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord (~> 5.2.3)
+  colorize
   database_cleaner
   pry
   rake

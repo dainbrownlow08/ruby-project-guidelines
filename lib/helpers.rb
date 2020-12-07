@@ -1,4 +1,5 @@
 #returns today's date as an array of strings in format [month_string,day_string]
+require 'pry'
 def todays_date
     todays_date = Time.now.to_s.split(" ")[0].split("-")
     date = [todays_date[1],todays_date[2]]
@@ -32,6 +33,7 @@ def valid_time?(time_array,day)
         false
     end
     valid_times = valid_times(day)
+    binding.pry
     if valid_times.find{|slot| time_array[0] >= slot[0] && time_array[1] <= slot[1]} != nil
         true
     else 
@@ -40,29 +42,33 @@ def valid_time?(time_array,day)
 end
 
 def valid_times(day)
-    schedule = day.entries.map{|entry| [entry.start_time,entry.end_time]}
-    validTimes = [[0,0]]
-    if schedule[0][0] > 0
-        validTimes[0][0] = 0
-        validTimes[0][1] = schedule[0][0]
-        (schedule.length-1).times do |i|
-            validTimes << []
-            validTimes[i+1][0] = schedule[i][1]
-            validTimes[i+1][1] = schedule[i+1][0]
-        end
-        validTimes << [schedule.last[1], 24*60]
-    else
-        validTimes[0][0] = schedule[0][1]
-        validTimes[0][1] = schedule[1][0]
-        (schedule.length-2).times do |i|
-            validTimes << []
-            validTimes[i+1][0] = schedule[i+1][1]
-            validTimes[i+1][1] = schedule[i+2][0]
-    
+    if day.entries.length == 0
+        validTimes = [0,24*60]
+    else 
+        schedule = day.entries.map{|entry| [entry.start_time,entry.end_time]}
+        validTimes = [[0,0]]
+        if schedule[0][0] > 0
+            validTimes[0][0] = 0
+            validTimes[0][1] = schedule[0][0]
+            (schedule.length-1).times do |i|
+                validTimes << []
+                validTimes[i+1][0] = schedule[i][1]
+                validTimes[i+1][1] = schedule[i+1][0]
+            end
+            validTimes << [schedule.last[1], 24*60]
+        else
+            validTimes[0][0] = schedule[0][1]
+            validTimes[0][1] = schedule[1][0]
+            (schedule.length-2).times do |i|
+                validTimes << []
+                validTimes[i+1][0] = schedule[i+1][1]
+                validTimes[i+1][1] = schedule[i+2][0]
+            end
         end
         validTimes << [schedule.last[1], 24*60] if schedule.last[1] != 24*60
     end
 end
+
 #checks is there are any entries that month
 def any_month_entries(month_string)
     if Day.all.find{|day| day.month == month_string.to_i} != nil
@@ -74,14 +80,6 @@ def any_month_entries(month_string)
         end
     else 
         false
-    end
-end
-#checks if there is any entries that day
-def any_day_entries?(day)
-    if day.entries.length == 0
-        false
-    else 
-        true
     end
 end
 

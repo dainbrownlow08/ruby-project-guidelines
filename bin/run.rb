@@ -5,8 +5,8 @@ input = "begin"
 print "Please enter username: "
 username = gets.chomp
 user = User.find_or_create_by(name: username)
-
-puts "\nWelcome to your planner, #{user.name}!"
+landing
+puts "\n Welcome to your planner,"+" #{user.name}".colorize(:blue)+"!"
 
 while input != "quit"
     print "\nWhat would you like to do? (input 'menu' for menu options.): "
@@ -21,9 +21,7 @@ while input != "quit"
         
     when "day"
         case_day
-        
-    #when "week"
-        ###########
+
     when "month"
         case_month
     
@@ -34,7 +32,14 @@ while input != "quit"
         case_update
     
     when "remove"
-        case_remove
+        case_remove  
+    
+    when "quit"
+        case_quit(user)
+    
+    else
+        case_all_other_inputs
+    
     end
     
 

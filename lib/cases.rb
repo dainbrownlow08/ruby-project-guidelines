@@ -1,17 +1,24 @@
 require 'pry'
+def landing
+    puts "
+     █████╗    ██╗   ██████╗     ██████╗ ██╗      █████╗ ███╗   ██╗███╗   ██╗███████╗██████╗ 
+    ██╔══██╗   ██║   ██╔══██╗    ██╔══██╗██║     ██╔══██╗████╗  ██║████╗  ██║██╔════╝██╔══██╗
+    ███████║████████╗██║  ██║    ██████╔╝██║     ███████║██╔██╗ ██║██╔██╗ ██║█████╗  ██████╔╝
+    ██╔══██║   ██╔══╝██║  ██║    ██╔═══╝ ██║     ██╔══██║██║╚██╗██║██║╚██╗██║██╔══╝  ██╔══██╗
+    ██║  ██║   ██║   ██████╔╝    ██║     ███████╗██║  ██║██║ ╚████║██║ ╚████║███████╗██║  ██║
+    ╚═╝  ╚═╝   ╚═╝   ╚═════╝     ╚═╝     ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝".colorize(:blue)
+    
+end
+
 def case_menu
-    puts
-    puts "                   M         E         N         U                  "
-    puts "|------------------------------------------------------------------|"
-    puts "| Input 'entry' to create a new entry.                             |"
-    puts "| Input 'day' to view your daily schedule.                         |"
-    #puts "|Input 'week' to view your weekly schedule.                        |"
-    puts "| Input 'month' to view your monthly schedule.                     |"
-    puts "| Input 'all' to view all your scheduled activities.               |"
-    puts "| Input 'update' to update an entry.                               |"
-    puts "| Input 'remove' to remove an entry.                               |"
-    puts "| Input 'quit' to quit out of the program.                         |"
-    puts "|------------------------------------------------------------------|"
+    puts "                                       
+    Input '".colorize(:blue)+"entry".colorize(:yellow)+"' to create a new entry.                             
+    Input '".colorize(:blue)+"day".colorize(:yellow)+"' to view your daily schedule.                         
+    Input '".colorize(:blue)+"month".colorize(:yellow)+"' to view your monthly schedule.                     
+    Input '".colorize(:blue)+"all".colorize(:yellow)+"' to view all your scheduled activities.               
+    Input '".colorize(:blue)+"update".colorize(:yellow)+"' to update an entry.                               
+    Input '".colorize(:blue)+"remove".colorize(:yellow)+"' to remove an entry.                               
+    Input '".colorize(:blue)+"quit".colorize(:red)+"' to quit out of the program.".colorize(:blue)
 end
 
 def case_entry(user)
@@ -54,15 +61,20 @@ end
 def case_day
     todays_month, todays_day = todays_date[0], todays_date[1]
     entry_day = Day.where("month = ? AND day = ?",todays_month,todays_day).first
-    if entry_day.entries == []
-        puts "\nYour schedule is empty today"  
-    else
-        entry_day.entries.sort_by{|entry| entry.start_time}.each{|entry| puts "\n#{entry.converted_start_time} - #{entry.converted_end_time} : #{entry.description}"}
+    if Day.all.find_by(:day => entry_day) == nil
+        puts "\n Your schedule is empty for the day."
+        return
     end
+    entry_day.entries.sort_by{|entry| entry.start_time}.each{|entry| puts "\n#{entry.converted_start_time} - #{entry.converted_end_time} : #{entry.description}"}
+
 end
 
 def case_month
     todays_month = todays_date[0]
+    if any_month_entries(todays_month) == false
+        puts "\n Your monthly schdule is empty."
+        return
+    end
     days_of_this_month = Day.where("month = ?",todays_month)
     days_of_this_month.each do |day|
         puts "\n#{day.month}/#{day.day}"
@@ -76,10 +88,14 @@ end
 def case_all
     entry_by_day = Entry.order(:day_id).group_by{|entry| entry.day_id}
     index = entry_by_day.keys[0]
-    entry_by_day.count.times do
-        puts "\n#{Day.all.find{|day| day.id == index}.month}/#{Day.all.find{|day| day.id == index}.day}"
-        entries = entry_by_day[index].sort_by{|entry| entry.start_time}.each{|entry| puts "\n#{entry.converted_start_time} - #{entry.converted_end_time} : #{entry.description}"}
-        index +=1
+    if entry_by_day.count == 0
+        puts "\n Your schedule is empty. To begin scheduling, use 'entry'."
+    else 
+        entry_by_day.count.times do
+            puts "\n#{Day.all.find{|day| day.id == index}.month}/#{Day.all.find{|day| day.id == index}.day}"
+            entries = entry_by_day[index].sort_by{|entry| entry.start_time}.each{|entry| puts "\n#{entry.converted_start_time} - #{entry.converted_end_time} : #{entry.description}"}
+            index +=1
+        end
     end
 end
 
@@ -93,7 +109,6 @@ def case_update
     if any_month_entries(month) == false
         puts "\nThere are no entries this month."
         return
-    
     end
     print "Please enter the target entry's day: "
     day = gets.chomp
@@ -164,5 +179,10 @@ def case_remove
     puts "\n Entry removed."
 end
 
+def case_quit(user)
+    puts "Thank you for using your planner"+ " #{user.name}".colorize(:blue)+"! See you again soon."
+end
 
-
+def case_all_other_inputs
+    puts "\n Not a known command. Try again."
+end

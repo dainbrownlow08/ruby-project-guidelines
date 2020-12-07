@@ -78,9 +78,9 @@ def case_month(user)
         return
     end
     days_of_this_month = Day.where("month = ?",todays_month)
-    days_of_this_month.each do |day|
+    days_of_this_month.sort_by{|day| day.day }.each do |day|
         puts "\n#{day.month}/#{day.day}"
-        entries = day.entries.select{|entry| entry.user_id == user.id}.sort_by{|day| day.day }.sort_by{|entry| entry.start_time}
+        entries = day.entries.select{|entry| entry.user_id == user.id}.sort_by{|entry| entry.start_time}
         entries.each do |entry|
             puts "\n#{entry.converted_start_time} - #{entry.converted_end_time} : #{entry.description}"
         end

@@ -32,6 +32,9 @@ def valid_time?(time_array,day,user)
     if bounds_check.length > 0
         false
     end
+    if time_array[0] > time_array[1]
+        false
+    end
     valid_times = valid_times(day,user)
     if valid_times.find{|slot| time_array[0] >= slot[0] && time_array[1] <= slot[1]} != nil
         true

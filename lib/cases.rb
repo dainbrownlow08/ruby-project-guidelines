@@ -153,17 +153,16 @@ def case_update(user)
     end
 end
 
-def case_remove
+def case_remove(user)
     print "Please enter the target entry's month: "
     month = gets.chomp
     while !valid_month?(month)
-        print "This is not a valid month. Please provide a month from #{todays_date[0]} to 12: "
+        print "This is not a valid month. Please provide a month from 1 to 12: "
         month = gets.chomp
     end
-    if any_month_entries(month) == false
+    if any_month_entries(month,user) == false
         puts "\nThere are no entries this month."
         return
-    
     end
     print "Please enter the target entry's day: "
     day = gets.chomp
@@ -176,6 +175,10 @@ def case_remove
         return
     end
     day_to_remove_from = Day.all.find_by(:day => day)
+    if any_day_entries?(day_to_remove_from,user) == false
+        puts "You have not made an entry for this day."
+        return
+    end
     day_to_remove_from.entries.sort_by{|entry| entry.start_time}.each{|entry| puts "\n#{entry.converted_start_time} - #{entry.converted_end_time} : #{entry.description}"}
     
     print "\nWhat is the start time of the entry you would like to delete?(please use 24hr time HH:MM): "

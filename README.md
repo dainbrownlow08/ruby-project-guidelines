@@ -1,7 +1,7 @@
 # A+D Planner
 
 A+D Planner is a tool that allows computer users who are familiar with their terminal to do plan out their schedule.
-This application supports multiple user accounts, with their own individual schedules. They can create entries by providing a date and time for each, look over thier daily, monthly, and yearly schedules, and maniuplate their entries in case of a change in plans.
+This application supports multiple user accounts, with their own individual schedules. They can create entries by providing a date and time for each, look over their daily, monthly, and yearly schedules, and maniuplate their entries in case of a change in plans.
 
 ## Prerequisites
 
@@ -21,6 +21,8 @@ To install A+D Planner, follow these steps:
 3. Navigate into that directory and use the command: `git clone <project-SSH>`
 
 ## Using A+D Planner
+
+For a quick demo, follow the link (https://www.youtube.com/watch?v=UnLJFyOrODY&feature=youtu.be)
 
 To use A+D Planner, follow these steps:
 
@@ -53,6 +55,7 @@ Thanks to the following people who have contributed to this project:
 
 - [@alexanderbowers](https://github.com/alexanderbowers) 📖 🐛
 - [@dainbrownlow](https://github.com/dainbrownlow08)📖
+- [@benswanson](https://github.com/Bswan0002)📖
 
 ## Contact
 

@@ -70,7 +70,6 @@ def case_day(user)
     end
 end
 
-
 def case_month(user)
     todays_month = todays_date[0]
     if any_month_entries(todays_month,user) == false
